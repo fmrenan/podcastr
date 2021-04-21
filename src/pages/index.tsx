@@ -1,18 +1,94 @@
-export default function Home(props) {
+import { GetStaticProps } from "next"
+import { format, parseISO } from "date-fns"
+import ptBR from "date-fns/locale/pt-BR"
+import Image from 'next/image'
+import { api } from "../services/api"
+import { convertDurationToTimeString } from "../utils/convertDurationToTimeString"
+
+import styles from './home.module.scss'
+
+type Episode = {
+  id: string
+  title: string
+  thumbnail: string
+  description: string
+  members: string
+  duration: number
+  durationAsString: string
+  url: string
+  publishedAt: string
+}
+
+type HomeProps = {
+  latestEpisodes : Episode[]
+  allEpisodes: Episode[]
+}
+
+export default function Home({latestEpisodes, allEpisodes} : HomeProps) {
   return (
-    <>
-    <h1>Episodios: {JSON.stringify(props.episodes).length}</h1>
-    </>
+    <div className={styles.homepage}>
+      <section className={styles.latestEpisodes}>
+        <h2>Últimos Lançamentos</h2>
+        
+        <ul>
+          {latestEpisodes.map(episode => {
+            return(
+              <li key={episode.id}>{episode.title}
+                <Image width={192} height={192} src={episode.thumbnail} alt={episode.title} />
+                
+                <div className={styles.episodeDetails}>
+                  <a href="#">{episode.title}</a>
+                  <p>{episode.members}</p>
+                  <span>{episode.publishedAt}</span>
+                  <span>{episode.durationAsString}</span>
+                </div>
+
+                <button type="button">
+                  <img src="/play-green.svg" alt="Tocar Episódio"/>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      </section>
+
+      <section className={styles.allEpisodes}>
+        
+      </section>
+    </div>
   )
 }
 
-export async function getStaticProps(){
-  const response = await fetch('http://localhost:3333/episodes')
-  const data = await response.json()
+export const getStaticProps: GetStaticProps = async () => {
+  const { data } = await api.get('episodes',{
+    params:{
+      _limit: 12,
+      _sort: 'published_at',
+      order: 'desc'
+    }
+  })
+
+  const episodes = data.map(episode => {
+    return{
+      id: episode.id,
+      title: episode.title,
+      thumbnail: episode.thumbnail,
+      members: episode.members,
+      publishedAt: format(parseISO(episode.published_at), 'd MMM yy', { locale: ptBR }),
+      duration: Number(episode.file.duration),
+      durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
+      description: episode.description,
+      url: episode.file.url
+    }
+  })
+
+  const latestEpisodes = episodes.slice(0,2)
+  const allEpisodes = episodes.slice(2, episodes.length)
 
   return{
     props: {
-      episodes: data,
+      latestEpisodes,
+      allEpisodes
     },
     revalidate: 60 * 60 * 12,
   }
