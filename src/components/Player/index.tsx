@@ -7,6 +7,7 @@ import { usePlayer } from '../../contexts/PlayerContext'
 import 'rc-slider/assets/index.css'
 import styles from './styles.module.scss'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
+import Head from 'next/head'
 
 export function Player(){
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -67,6 +68,7 @@ export function Player(){
 
   return(
     <div className={styles.playerContainer}>
+      
       <header>
         <img src="/playing.svg" alt="Tocando Agora"/>
         <strong>Tocando agora</strong>

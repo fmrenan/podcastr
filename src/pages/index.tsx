@@ -9,6 +9,7 @@ import { convertDurationToTimeString } from "../utils/convertDurationToTimeStrin
 import { usePlayer } from "../contexts/PlayerContext"
 
 import styles from './home.module.scss'
+import Head from "next/head"
 
 
 type Episode = {
@@ -28,12 +29,20 @@ type HomeProps = {
 }
 
 export default function Home({latestEpisodes, allEpisodes} : HomeProps) {
-  const { playList } = usePlayer()
+  const { playList, currentEpisodeIndex, isPlaying } = usePlayer()
 
   const episodeList = [...latestEpisodes, ...allEpisodes]
 
   return (
     <div className={styles.homepage}>
+      <Head>
+        {isPlaying ? (
+          <title>PodCastr - {episodeList[currentEpisodeIndex].title}</title>
+        ) : (
+          <title>Home | PodCastr </title>
+        )}
+        
+      </Head>      
       <section className={styles.latestEpisodes}>
         <h2>Últimos Lançamentos</h2>
         

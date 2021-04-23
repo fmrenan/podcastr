@@ -9,6 +9,7 @@ import { convertDurationToTimeString } from '../../utils/convertDurationToTimeSt
 import { usePlayer } from '../../contexts/PlayerContext'
 
 import styles from './episode.module.scss'
+import Head from 'next/head'
 
 
 type Episode = {
@@ -32,6 +33,10 @@ export default function Episode({ episode } : EpisodeProps){
 
   return (
     <div className={styles.episodeContainer}>
+      <Head>
+        <title>{episode.title} | PodCastr</title>
+      </Head>
+
       <div className={styles.episode}>
         <div className={styles.thumbnailContainer}>
           <Link href="/">
