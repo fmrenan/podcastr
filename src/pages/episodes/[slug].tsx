@@ -6,10 +6,10 @@ import { ptBR } from 'date-fns/locale'
 
 import { api } from '../../services/api'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
+import { usePlayer } from '../../contexts/PlayerContext'
 
 import styles from './episode.module.scss'
-import { PlayerContext } from '../../contexts/PlayerContext'
-import { useContext } from 'react'
+
 
 type Episode = {
   id: string
@@ -28,7 +28,7 @@ type EpisodeProps = {
 }
 
 export default function Episode({ episode } : EpisodeProps){
-  const { play } = useContext(PlayerContext)
+  const { play } = usePlayer()
 
   return (
     <div className={styles.episodeContainer}>
