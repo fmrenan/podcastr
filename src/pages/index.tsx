@@ -120,7 +120,7 @@ export default function Home({latestEpisodes, allEpisodes} : HomeProps) {
 export const getStaticProps: GetStaticProps = async () => {
   const { data } = await api.get('episodes')
 
-  const episodes = data.map(episode => {
+  const episodes = data.episodes.map(episode => {
     return{
       id: episode.id,
       title: episode.title,

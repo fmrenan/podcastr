@@ -79,18 +79,27 @@ export const getStaticPaths: GetStaticPaths = async () =>{
 export const getStaticProps: GetStaticProps = async (context) =>{
   const { slug } = context.params
   
-  const { data } = await api.get(`/episodes/${slug}`)
+  const { data } = await api.get('episodes')
+
+
   
+  var selected
+  data.episodes.map(ep => {
+    if(ep.id === slug){
+      selected = ep
+    }    
+  })
+
   const episode = {
-    id: data.id,
-    title: data.title,
-    thumbnail: data.thumbnail,
-    members: data.members,
-    publishedAt: format(parseISO(data.published_at), 'd MMM yy', { locale: ptBR }),
-    duration: Number(data.file.duration),
-    durationAsString: convertDurationToTimeString(Number(data.file.duration)),
-    description: data.description,
-    url: data.file.url
+    id: selected.id,
+    title: selected.title,
+    thumbnail: selected.thumbnail,
+    members: selected.members,
+    publishedAt: format(parseISO(selected.published_at), 'd MMM yy', { locale: ptBR }),
+    duration: Number(selected.file.duration),
+    durationAsString: convertDurationToTimeString(Number(selected.file.duration)),
+    description: selected.description,
+    url: selected.file.url
   }
   
   return{
