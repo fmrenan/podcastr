@@ -80,8 +80,6 @@ export const getStaticProps: GetStaticProps = async (context) =>{
   const { slug } = context.params
   
   const { data } = await api.get('episodes')
-
-
   
   var selected
   data.episodes.map(ep => {
