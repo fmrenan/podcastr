@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }) {
     setEpisodeList([episode])
     setCurrentEpisodeIndex(0)
     setIsPlaying(true)
-    console.log(isPlaying)
+    console.log('isPlaying')
   }
 
   function togglePlay(){
